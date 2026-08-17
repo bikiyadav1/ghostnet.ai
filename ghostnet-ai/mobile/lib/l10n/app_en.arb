@@ -1,0 +1,23 @@
+{
+  "@@locale": "en",
+  "appTitle": "GhostNet AI",
+  "emergencyModeTitle": "Emergency SOS Mode",
+  "sosHoldTap": "HOLD / TAP",
+  "sosButtonText": "SOS",
+  "imSafeButton": "I'm Safe",
+  "emergencyCategoryLabel": "Emergency Category",
+  "categoryMedical": "Medical Emergency",
+  "categoryDisaster": "Natural Disaster",
+  "categorySecurity": "Security / Safety",
+  "categoryGeneral": "General Assistance",
+  "optionalDetailsHint": "Optional details (e.g. 2 people trapped, need boat)...",
+  "offlineModeActive": "Offline Mode: Local Drift SQLite active. Auto-sync on reconnect.",
+  "onlineModeActive": "Online Mode: Connected to GhostNet Emergency Mesh Gateway.",
+  "noManualRetryMessage": "No Manual Retry Required: Alerts are signed with GPS timestamp and automatically sync silently upon carrier or mesh reconnect.",
+  "safetyTipsTitle": "Offline Safety Protocols",
+  "zeroNetworkRequired": "Zero Network Required",
+  "languageSwitchLabel": "Language",
+  "meshRelayActive": "Mesh Relay Active",
+  "meshRelayedAlert": "Relayed via Nearby Peer",
+  "geofenceAlertTitle": "AI Alert: Entering a weak-signal dead zone (Ajodhya Hills). Offline SOS is primed & ready."
+}

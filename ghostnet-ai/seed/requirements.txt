@@ -1,0 +1,6 @@
+psycopg2-binary==2.9.9
+requests==2.32.3
+pygeohash==1.2.0
+shapely==2.0.4
+geoalchemy2==0.15.1
+sqlalchemy==2.0.30

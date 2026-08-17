@@ -1,0 +1,138 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "block_name": "Purulia Sadar",
+        "population": 121000,
+        "density_per_sqkm": 680,
+        "terrain": "urban_semi_urban"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [86.30, 23.30],
+          [86.42, 23.30],
+          [86.42, 23.38],
+          [86.30, 23.38],
+          [86.30, 23.30]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "block_name": "Jhalda",
+        "population": 85000,
+        "density_per_sqkm": 340,
+        "terrain": "undulating_plains"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [85.90, 23.30],
+          [86.05, 23.30],
+          [86.05, 23.42],
+          [85.90, 23.42],
+          [85.90, 23.30]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "block_name": "Baghmundi (Ajodhya Hills)",
+        "population": 45000,
+        "density_per_sqkm": 160,
+        "terrain": "hilly_forest_deadzone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [85.98, 23.12],
+          [86.15, 23.12],
+          [86.15, 23.26],
+          [85.98, 23.26],
+          [85.98, 23.12]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "block_name": "Balarampur",
+        "population": 68000,
+        "density_per_sqkm": 290,
+        "terrain": "rural_mixed"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [86.15, 23.02],
+          [86.30, 23.02],
+          [86.30, 23.16],
+          [86.15, 23.16],
+          [86.15, 23.02]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "block_name": "Manbazar",
+        "population": 54000,
+        "density_per_sqkm": 210,
+        "terrain": "waterbody_riverbank"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [86.55, 22.98],
+          [86.75, 22.98],
+          [86.75, 23.14],
+          [86.55, 23.14],
+          [86.55, 22.98]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "block_name": "Raghunathpur",
+        "population": 72000,
+        "density_per_sqkm": 420,
+        "terrain": "industrial_plains"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [86.58, 23.46],
+          [86.76, 23.46],
+          [86.76, 23.62],
+          [86.58, 23.62],
+          [86.58, 23.46]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "block_name": "Bandwan",
+        "population": 38000,
+        "density_per_sqkm": 110,
+        "terrain": "dense_forest_deadzone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [86.40, 22.80],
+          [86.60, 22.80],
+          [86.60, 22.95],
+          [86.40, 22.95],
+          [86.40, 22.80]
+        ]]
+      }
+    }
+  ]
+}

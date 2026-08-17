@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GhostNet AI — West Bengal Disaster & Cellular Intelligence Platform</title>
+  
+  <!-- Google Fonts: Outfit, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Leaflet Heatmap Plugin (Natively Embedded) -->
+  <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- HEADER & DUAL WORKSPACE SWITCHER                                        -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <header class="app-header">
+    <div class="header-inner">
+      
+      <!-- Brand & West Bengal Badge -->
+      <div class="brand-section">
+        <div class="brand-orb">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">
+            GhostNet <span>AI</span>
+            <span class="sih-tag">SIH 2026</span>
+          </div>
+          <div style="font-size:0.7rem; color:var(--text-secondary); display:flex; align-items:center; gap:0.25rem;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+            West Bengal State Intelligence Boundary
+          </div>
+        </div>
+      </div>
+
+      <!-- WORKSPACE VIEW MODES (Dual Window Switcher) -->
+      <div class="workspace-tabs">
+        <button class="workspace-tab-btn" id="tabSpatial" onclick="setWorkspaceMode('spatial')">
+          🗺️ Spatial Ops
+        </button>
+        <button class="workspace-tab-btn" id="tabBackend" onclick="setWorkspaceMode('backend')">
+          ⚡ Backend Engine
+        </button>
+        <button class="workspace-tab-btn active" id="tabSplit" onclick="setWorkspaceMode('split')">
+          🖥️ Dual Split View
+        </button>
+      </div>
+
+      <!-- Actions Bar -->
+      <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+        
+        <!-- Live SSE Stream Status -->
+        <div class="clay-btn clay-btn-surface" style="cursor:default; padding:0.35rem 0.65rem;">
+          <span style="width:7px; height:7px; border-radius:50%; background:var(--accent-emerald); box-shadow:0 0 8px var(--accent-emerald);"></span>
+          <span style="font-family:var(--font-mono); font-size:0.68rem;" id="streamStatus">LIVE STREAM</span>
+        </div>
+
+        <!-- Recompute ML Model Action -->
+        <button class="clay-btn clay-btn-primary" id="btnRecompute" onclick="triggerRecompute()" title="Recompute XGBoost dead-zone regressor and demographic tower clustering">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+          Recompute AI Model
+        </button>
+
+        <!-- Dispatch Emergency SOS Button -->
+        <button class="clay-btn clay-btn-rose" onclick="injectLiveSos('medical', 22.0150, 88.8150, 'CRITICAL: Severe cyclone medical trauma in Gosaba delta hamlet.')" title="Dispatch real-time emergency alert">
+          🚨 Trigger Emergency SOS
+        </button>
+
+        <!-- 🌓 Theme Toggle -->
+        <button class="clay-btn clay-btn-surface" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Light / Dark Mode" style="padding:0.4rem 0.55rem;">
+          <span id="themeIcon">☀️</span>
+        </button>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- DYNAMIC LIVE METRICS OVERVIEW BAR                                       -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <section class="metrics-bar">
+    <div class="metric-clay-pill">
+      <div class="metric-top-label">
+        <span>West Bengal Telemetry</span>
+        <span style="color:var(--accent-cyan);">LIVE INGESTION</span>
+      </div>
+      <div class="metric-big-num" id="valTotalReadings">450+</div>
+      <div class="metric-sub-detail"><span style="color:var(--accent-emerald);" id="valLivePackets">+0 live stream</span> packets</div>
+    </div>
+
+    <div class="metric-clay-pill">
+      <div class="metric-top-label">
+        <span>Dynamic Mean Signal</span>
+        <span style="color:var(--accent-emerald);">REAL-TIME</span>
+      </div>
+      <div class="metric-big-num" style="color:var(--accent-emerald);" id="valMeanSignal">
+        -76.4 <span style="font-size:0.85rem; color:var(--text-secondary);">dBm</span>
+      </div>
+      <div class="metric-sub-detail" id="valMeanSub">Updated every packet pulse</div>
+    </div>
+
+    <div class="metric-clay-pill">
+      <div class="metric-top-label">
+        <span>AI Dead-Zone Outages</span>
+        <span style="color:var(--accent-rose);">XGBOOST IDW</span>
+      </div>
+      <div class="metric-big-num" style="color:var(--accent-rose);" id="valDeadZonesCount">8 <span style="font-size:0.85rem; color:var(--text-secondary);">zones</span></div>
+      <div class="metric-sub-detail">Singalila / Sundarbans / Bandwan</div>
+    </div>
+
+    <div class="metric-clay-pill">
+      <div class="metric-top-label">
+        <span>Active Priority Queue</span>
+        <span style="color:var(--accent-amber);">DYNAMIC SCORE</span>
+      </div>
+      <div class="metric-big-num" style="color:var(--accent-amber);" id="valActiveSosCount">4</div>
+      <div class="metric-sub-detail">Sub-300ms Dynamic Corroboration</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- DUAL WORKSPACE PANELS                                                   -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <main class="workspace-grid split-mode" id="workspaceContainer">
+    
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- WINDOW 1: SPATIAL OPERATIONS & DISPATCH CENTER                      -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div id="windowSpatial" style="display:flex; flex-direction:column; gap:1.25rem;">
+      
+      <!-- Spatial GIS Map with In-Map Header Card & Mockup Callouts -->
+      <div class="map-clay-frame">
+        
+        <!-- TOP IN-MAP COVERAGE HEADER CARD (Matching User Mockup) -->
+        <div class="inmap-coverage-header">
+          <div class="inmap-coverage-top-row">
+            
+            <!-- Left: Title & Overall % -->
+            <div>
+              <div class="cov-title-main" id="covHeaderCity">WEST BENGAL</div>
+              <div class="cov-title-sub">STATEWIDE COVERAGE</div>
+              <div class="cov-overall-pct" id="covHeaderOverall">Overall Network Coverage: <strong>76.4%</strong></div>
+            </div>
+
+            <!-- Middle: Coverage Trends Sparkline -->
+            <div class="cov-trends-box">
+              <div>
+                <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.65rem; font-weight:800; color:var(--text-secondary); gap:8px;">
+                  <span>Coverage Trends</span>
+                  <span style="font-size:0.58rem; color:var(--text-muted);">ⓘ Last Updated: <span id="covTimestamp">2026-08-16 20:45 IST</span></span>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; font-size:0.6rem; font-family:var(--font-mono); margin:2px 0;">
+                  <span style="color:#EF4444; display:flex; align-items:center; gap:2px;"><span style="width:6px; height:6px; border-radius:50%; background:#EF4444;"></span>4G</span>
+                  <span style="color:#3B82F6; display:flex; align-items:center; gap:2px;"><span style="width:6px; height:6px; border-radius:50%; background:#3B82F6;"></span>5G</span>
+                </div>
+              </div>
+              <svg class="cov-sparkline-svg" viewBox="0 0 120 30" fill="none">
+                <!-- 4G curve (red) -->
+                <path d="M5 22 Q 35 18, 65 16 T 115 12" stroke="#EF4444" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <!-- 5G curve (blue) -->
+                <path d="M5 26 Q 35 24, 65 14 T 115 6" stroke="#3B82F6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                <circle cx="115" cy="6" r="3" fill="#3B82F6"/>
+              </svg>
+            </div>
+
+            <!-- Right: Region Switcher & AI Analysis Button -->
+            <div style="display:flex; align-items:center; gap:6px;">
+              <select id="regionSelect" onchange="switchMapRegion(this.value)" style="background:var(--bg-surface); border:1px solid var(--border-subtle); color:var(--text-primary); padding:5px 8px; border-radius:8px; font-size:0.72rem; font-weight:700; font-family:var(--font-sans); cursor:pointer;">
+                <option value="kolkata">🏙️ Kolkata Metro</option>
+                <option value="sundarbans">🌊 Sundarbans Delta</option>
+                <option value="darjeeling">🏔️ Darjeeling Ridge</option>
+                <option value="purulia">🌾 Purulia Corridor</option>
+                <option value="all" selected>🗺️ Entire West Bengal</option>
+              </select>
+
+              <button class="clay-btn clay-btn-surface" onclick="triggerRecompute()" style="font-size:0.72rem; padding:5px 10px; font-weight:800; display:flex; align-items:center; gap:4px;">
+                <span>🤖</span> AI Analysis
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Bottom Metric Row -->
+          <div class="inmap-coverage-metrics-row">
+            <div>5G Availability: <span class="metric-highlight-green" id="cov5gAvail">62% (+1.5%)</span></div>
+            <div>VoLTE Quality: <span class="metric-highlight-green" id="covVolteQuality">94%</span></div>
+            <div>Latency (Avg): <span style="color:#00F0FF; font-weight:800;" id="covLatencyAvg">18ms</span></div>
+          </div>
+        </div>
+
+        <!-- BOTTOM LEFT: NETWORK COVERAGE KEY (Matching User Mockup) -->
+        <div class="inmap-legend-bottomleft">
+          <div style="font-weight:900; font-size:0.75rem; letter-spacing:0.3px; margin-bottom:5px; color:var(--text-primary);">
+            NETWORK COVERAGE KEY
+          </div>
+          <div style="display:flex; flex-direction:column; gap:3px; font-weight:700; font-size:0.68rem;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="width:10px; height:10px; border-radius:2px; background:#10B981;"></span>
+              <span>Strong (90-100%)</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="width:10px; height:10px; border-radius:2px; background:#F59E0B;"></span>
+              <span>Moderate (60-89%)</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="width:10px; height:10px; border-radius:2px; background:#EF4444;"></span>
+              <span>Dead Zone (0-59%)</span>
+            </div>
+          </div>
+          <div style="margin-top:6px; padding-top:4px; border-top:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:space-between; color:var(--text-muted); font-size:0.65rem;">
+            <span>Data Points:</span>
+            <span>📶 🌐 📡 🛰️</span>
+          </div>
+        </div>
+
+        <!-- BOTTOM CENTER: TECHNOLOGY BREAKDOWN (Matching User Mockup) -->
+        <div class="inmap-tech-bottomcenter">
+          <div style="font-weight:900; font-size:0.72rem; color:var(--text-primary);">Technology Breakdown</div>
+          <div style="display:flex; gap:14px; align-items:center; font-family:var(--font-sans);">
+            
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="background:#EF4444; color:#FFF; font-weight:900; font-size:0.62rem; padding:1px 4px; border-radius:4px;">4G</span>
+              <div style="font-size:0.65rem; line-height:1.2;">
+                <div style="font-weight:700; color:var(--text-primary);">4G Availability</div>
+                <div style="color:var(--text-muted); font-size:0.6rem;">5G Download: 4%, Avg. 26 Mbps</div>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="background:#3B82F6; color:#FFF; font-weight:900; font-size:0.62rem; padding:1px 4px; border-radius:4px;">5G</span>
+              <div style="font-size:0.65rem; line-height:1.2;">
+                <div style="font-weight:700; color:var(--text-primary);">5G Availability</div>
+                <div style="color:var(--text-muted); font-size:0.6rem;">5G Download: 94%, 5G Peak: 1.5 Gbps</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BOTTOM RIGHT: USER / RESPONDER AVATAR -->
+        <div class="inmap-avatar-bottomright" title="Active Dispatch Operator: SIH-HQ-01">
+          <span>👨‍💻</span>
+        </div>
+
+        <!-- IN-MAP FLOATING OVERLAY: RESCUE DISPATCH ALERT MODAL (Appears on SOS) -->
+        <div id="inmapRescueAlert" class="inmap-rescue-banner" style="display:none;">
+          <div style="font-size:1.1rem;">🚨</div>
+          <div style="flex:1;">
+            <div style="font-size:0.75rem; font-weight:800; color:#FF2A55;" id="rescueAlertTitle">EMERGENCY RESCUE DISPATCHED</div>
+            <div style="font-size:0.68rem; color:var(--text-primary);" id="rescueAlertMsg">SDRF Rescue Unit dispatched from nearest facility. Estimated ETA: 8 mins.</div>
+          </div>
+          <button class="clay-btn clay-btn-surface" onclick="document.getElementById('inmapRescueAlert').style.display='none'" style="font-size:0.65rem; padding:2px 6px;">Dismiss</button>
+        </div>
+
+        <div id="map"></div>
+      </div>
+
+      <!-- Live Priority SOS Queue -->
+      <div class="clay-card">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.85rem;">
+          <div>
+            <h3 style="font-size:1rem; font-weight:800; color:var(--text-primary); display:flex; align-items:center; gap:0.4rem;">
+              <span style="width:9px; height:9px; border-radius:50%; background:var(--accent-rose); box-shadow:0 0 10px var(--accent-rose);"></span>
+              Live Emergency SOS Queue (West Bengal)
+            </h3>
+            <p style="font-size:0.7rem; color:var(--text-secondary); margin-top:2px;">
+              Score = 0.40·Category + 0.25·Recency + 0.20·Corroboration + 0.15·DeadZone
+            </p>
+          </div>
+          <span class="sih-tag">Dynamic Corroboration</span>
+        </div>
+
+        <div class="sos-feed-container" id="sosFeedList" style="max-height:360px;">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+
+      <!-- Mobile Phone Simulator -->
+      <div class="clay-card">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+          <div>
+            <h4 style="font-size:0.95rem; font-weight:800; color:var(--text-primary);">Mobile Phone Simulator</h4>
+            <p style="font-size:0.7rem; color:var(--text-secondary);">Test offline Drift SQLite buffering, mesh relay, and Hindi mode</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.4rem;">
+            <button class="clay-btn clay-btn-surface" id="btnAirplane" onclick="toggleAirplaneMode()" style="font-size:0.68rem; padding:0.3rem 0.6rem;">
+              ✈️ Airplane: OFF
+            </button>
+            <button class="clay-btn clay-btn-surface" id="btnLang" onclick="toggleMobileLanguage()" style="font-size:0.68rem; padding:0.3rem 0.6rem; color:var(--accent-cyan);">
+              🌐 हिन्दी
+            </button>
+          </div>
+        </div>
+
+        <div class="phone-shell">
+          <div class="phone-island"></div>
+          <div style="padding:1rem; display:flex; flex-direction:column; align-items:center; text-align:center;">
+            
+            <div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <span style="font-size:0.72rem; font-weight:800; color:var(--accent-cyan);" id="mobAppTitle">GhostNet Mobile</span>
+              <span id="mobSignalBadge" style="font-size:0.65rem; font-family:var(--font-mono); color:var(--accent-emerald); background:rgba(0,229,153,0.15); padding:2px 6px; border-radius:6px; font-weight:700;">-78 dBm (4G)</span>
+            </div>
+
+            <div id="mobBanner" style="width:100%; background:var(--bg-app); border-radius:8px; padding:6px 8px; font-size:0.68rem; color:var(--text-secondary); margin-bottom:0.65rem; text-align:left; border:1px solid var(--border-subtle);">
+              🟢 Online Mode: Connected to GhostNet Gateway.
+            </div>
+
+            <!-- Big Red Pulsing SOS Button -->
+            <div class="big-red-sos-btn" id="mobSosBtn" onclick="triggerMobileSos()">
+              <span style="font-size:0.62rem; letter-spacing:1px; font-weight:700;" id="mobHoldTap">HOLD / TAP</span>
+              <span style="font-size:1.75rem; font-weight:900; letter-spacing:2px;" id="mobSosText">SOS</span>
+            </div>
+
+            <!-- Category Picker -->
+            <div style="width:100%; display:grid; grid-template-columns:1fr 1fr; gap:5px; margin:0.35rem 0;">
+              <button class="clay-btn clay-btn-surface active" id="catBtnMedical" onclick="setMobileCategory('medical')" style="font-size:0.68rem; padding:0.35rem; justify-content:center; border-color:var(--accent-rose);">
+                ❤️ <span id="lblCatMedical">Medical</span>
+              </button>
+              <button class="clay-btn clay-btn-surface" id="catBtnDisaster" onclick="setMobileCategory('disaster')" style="font-size:0.68rem; padding:0.35rem; justify-content:center;">
+                🌊 <span id="lblCatDisaster">Disaster</span>
+              </button>
+              <button class="clay-btn clay-btn-surface" id="catBtnSecurity" onclick="setMobileCategory('security')" style="font-size:0.68rem; padding:0.35rem; justify-content:center;">
+                🛡️ <span id="lblCatSecurity">Security</span>
+              </button>
+              <button class="clay-btn clay-btn-surface" id="catBtnGeneral" onclick="setMobileCategory('general')" style="font-size:0.68rem; padding:0.35rem; justify-content:center;">
+                🤝 <span id="lblCatGeneral">General</span>
+              </button>
+            </div>
+
+            <button class="clay-btn clay-btn-primary" onclick="triggerMobileCheckIn()" style="width:100%; margin-top:0.35rem; justify-content:center; font-size:0.72rem;" id="btnMobSafe">
+              ✅ I'm Safe (One-Tap Check-In)
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- WINDOW 2: LIVE BACKEND ENGINE & KERNEL INTELLIGENCE                 -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div id="windowBackend" style="display:flex; flex-direction:column; gap:1.25rem;">
+      
+      <!-- Live Terminal Console -->
+      <div class="terminal-panel">
+        <div class="terminal-header">
+          <div style="display:flex; align-items:center; gap:0.6rem;">
+            <div class="terminal-dots">
+              <span class="term-dot" style="background:#FF5F56;"></span>
+              <span class="term-dot" style="background:#FFBD2E;"></span>
+              <span class="term-dot" style="background:#27C93F;"></span>
+            </div>
+            <span style="font-size:0.72rem; font-weight:800; font-family:var(--font-mono); color:var(--text-secondary);">ghostnet-backend@west-bengal:~$</span>
+          </div>
+          <span style="font-size:0.65rem; color:var(--accent-cyan); font-family:var(--font-mono); background:rgba(0,240,255,0.1); padding:2px 8px; border-radius:6px;">LIVE KERNEL TRACE</span>
+        </div>
+
+        <div class="terminal-feed" id="terminalFeed">
+          <!-- Live log lines injected by app.js -->
+        </div>
+      </div>
+
+      <!-- Demographic Census & Optimal Tower Sites -->
+      <div class="clay-card">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem;">
+          <div>
+            <h3 style="font-size:0.95rem; font-weight:800; color:var(--text-primary);">West Bengal Critical Gap Tower Sites</h3>
+            <p style="font-size:0.7rem; color:var(--text-secondary);">Statewide population clustering across vulnerable geographical corridors</p>
+          </div>
+          <span class="sih-tag">Spatial Clustering</span>
+        </div>
+
+        <table class="demographics-table">
+          <thead>
+            <tr>
+              <th>Region / Site</th>
+              <th>Terrain / Justification</th>
+              <th>Residents</th>
+              <th>Priority</th>
+            </tr>
+          </thead>
+          <tbody id="towerTableBody">
+            <!-- Populated by app.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Statewide Help Facilities -->
+      <div class="clay-card">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem;">
+          <div>
+            <h3 style="font-size:0.95rem; font-weight:800; color:var(--text-primary);">Statewide Emergency Facilities</h3>
+            <p style="font-size:0.7rem; color:var(--text-secondary);">Hospitals, police stations, and cyclone relief centers</p>
+          </div>
+          <span class="sih-tag">22 Key Hubs</span>
+        </div>
+
+        <div id="helpPointsList" style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; max-height:180px; overflow-y:auto; padding-right:4px;">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Client Engine Logic -->
+  <script src="app.js"></script>
+</body>
+</html>

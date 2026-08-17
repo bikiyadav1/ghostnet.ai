@@ -1,0 +1,20 @@
+{
+  "district": "Purulia",
+  "state": "West Bengal",
+  "country": "India",
+  "center": {
+    "lat": 23.3322,
+    "lon": 86.3652
+  },
+  "bbox": [85.80, 22.90, 86.90, 23.70],
+  "blocks": [
+    { "name": "Purulia Sadar", "lat": 23.3322, "lon": 86.3652, "population": 121000 },
+    { "name": "Jhalda", "lat": 23.3644, "lon": 85.9682, "population": 85000 },
+    { "name": "Balarampur", "lat": 23.0965, "lon": 86.2228, "population": 68000 },
+    { "name": "Baghmundi (Ajodhya Hills)", "lat": 23.1950, "lon": 86.0468, "population": 45000 },
+    { "name": "Manbazar", "lat": 23.0601, "lon": 86.6578, "population": 54000 },
+    { "name": "Raghunathpur", "lat": 23.5417, "lon": 86.6719, "population": 72000 },
+    { "name": "Bandwan (Forest Belt)", "lat": 22.8732, "lon": 86.5050, "population": 38000 },
+    { "name": "Kashipur", "lat": 23.4333, "lon": 86.6667, "population": 51000 }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "@@locale": "hi",
+  "appTitle": "घोस्टनेट एआई",
+  "emergencyModeTitle": "आपातकालीन एसओएस मोड",
+  "sosHoldTap": "दबाएं या स्पर्श करें",
+  "sosButtonText": "एसओएस",
+  "imSafeButton": "मैं सुरक्षित हूं",
+  "emergencyCategoryLabel": "आपातकालीन श्रेणी",
+  "categoryMedical": "चिकित्सा आपातकाल",
+  "categoryDisaster": "प्राकृतिक आपदा / बाढ़",
+  "categorySecurity": "सुरक्षा सहायता",
+  "categoryGeneral": "सामान्य सहायता",
+  "optionalDetailsHint": "अतिरिक्त विवरण (उदा. 2 लोग फंसे हैं, नाव चाहिए)...",
+  "offlineModeActive": "ऑफलाइन मोड: स्थानीय ड्रिफ्ट एसक्यूलाइट सक्रिय। नेटवर्क आने पर ऑटो-सिंक।",
+  "onlineModeActive": "ऑनलाइन मोड: घोस्टनेट आपातकालीन मेश गेटवे से जुड़ा है।",
+  "noManualRetryMessage": "मैन्युअल पुनः प्रयास की आवश्यकता नहीं: अलर्ट जीपीएस समय के साथ सुरक्षित हैं और नेटवर्क आने पर अपने आप भेजे जाएंगे।",
+  "safetyTipsTitle": "ऑफ़लाइन सुरक्षा सुझाव",
+  "zeroNetworkRequired": "100% ऑफ़लाइन उपलब्ध",
+  "languageSwitchLabel": "भाषा",
+  "meshRelayActive": "मेश रिले सक्रिय",
+  "meshRelayedAlert": "पास के उपकरण द्वारा रिले किया गया",
+  "geofenceAlertTitle": "एआई चेतावनी: कमजोर सिग्नल क्षेत्र (अयोध्या हिल्स) में प्रवेश कर रहे हैं। ऑफ़लाइन एसओएस तैयार है।"
+}

@@ -1,0 +1,113 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: ghostnet-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ghostnet
+      POSTGRES_PASSWORD: ghostnet_secure_pass
+      POSTGRES_DB: ghostnet_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ghostnet -d ghostnet_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: ghostnet-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ghostnet-backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://ghostnet:ghostnet_secure_pass@postgres:5432/ghostnet_db
+      REDIS_URL: redis://redis:6379/0
+      POSTGIS_SRID: 4326
+      SMS_GATEWAY_MODE: mock
+      MESH_MODE: simulated
+      DEMO_DISTRICT: "Purulia, West Bengal"
+      DEBUG: "True"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - ./ml:/ml
+      - ./seed:/seed
+
+  celery-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ghostnet-celery-worker
+    command: celery -A app.celery_app.celery_app worker --loglevel=info
+    restart: always
+    environment:
+      DATABASE_URL: postgresql+asyncpg://ghostnet:ghostnet_secure_pass@postgres:5432/ghostnet_db
+      REDIS_URL: redis://redis:6379/0
+      POSTGIS_SRID: 4326
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - ./ml:/ml
+      - ./seed:/seed
+
+  celery-beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ghostnet-celery-beat
+    command: celery -A app.celery_app.celery_app beat --loglevel=info
+    restart: always
+    environment:
+      DATABASE_URL: postgresql+asyncpg://ghostnet:ghostnet_secure_pass@postgres:5432/ghostnet_db
+      REDIS_URL: redis://redis:6379/0
+      POSTGIS_SRID: 4326
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: ghostnet-dashboard
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  redis_data:

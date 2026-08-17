@@ -1,0 +1,61 @@
+{
+  "safety_protocols": [
+    {
+      "id": "flood",
+      "category": "Flood & Inundation",
+      "category_hi": "बाढ़ और जलभराव",
+      "icon": "water_drop",
+      "priority": "high",
+      "steps_en": [
+        "Move immediately to higher ground or designated relief shelter.",
+        "Turn off main electricity switch and gas valves before leaving.",
+        "Do not walk or drive through moving flood waters (6 inches of water can knock you down).",
+        "Keep your phone in power-saving mode and conserve battery for emergency SOS."
+      ],
+      "steps_hi": [
+        "तुरंत ऊंचे स्थान या निर्दिष्ट राहत शिविर की ओर जाएं।",
+        "घर छोड़ने से पहले मुख्य बिजली का स्विच और गैस वाल्व बंद कर दें।",
+        "बहते बाढ़ के पानी में पैदल या वाहन से न जाएं (6 इंच पानी आपको गिरा सकता है)।",
+        "इमरजेंसी एसओएस के लिए फोन को पावर-सेविंग मोड में रखें और बैटरी बचाएं।"
+      ]
+    },
+    {
+      "id": "earthquake",
+      "category": "Earthquake",
+      "category_hi": "भूकंप सुरक्षा",
+      "icon": "vibration",
+      "priority": "critical",
+      "steps_en": [
+        "DROP, COVER, and HOLD ON under sturdy furniture.",
+        "Stay away from glass windows, exterior doors, and hanging objects.",
+        "If outdoors, move to an open area away from power lines, buildings, and trees.",
+        "Expect aftershocks and use offline GhostNet 'I am Safe' check-in."
+      ],
+      "steps_hi": [
+        "मजबूत मेज या फर्नीचर के नीचे झुकें, ढकें और पकड़ें (DROP, COVER, HOLD)।",
+        "कांच की खिड़कियों, बाहरी दरवाजों और लटकी हुई वस्तुओं से दूर रहें।",
+        "यदि बाहर हैं, तो बिजली के तारों, इमारतों और पेड़ों से दूर खुले मैदान में जाएं।",
+        "आफ्टरशॉक की आशंका रखें और ऑफलाइन 'मैं सुरक्षित हूं' चेक-इन का उपयोग करें।"
+      ]
+    },
+    {
+      "id": "cyclone",
+      "category": "Cyclone & Severe Storm",
+      "category_hi": "चक्रवात और भीषण तूफान",
+      "icon": "air",
+      "priority": "high",
+      "steps_en": [
+        "Inspect doors and windows; secure loose roof sheets with ropes.",
+        "Keep emergency kit ready: clean water, non-perishable food, medicine, and torch.",
+        "Stay indoors until official all-clear is announced by disaster authorities.",
+        "Disconnect electrical appliances to prevent surge damage."
+      ],
+      "steps_hi": [
+        "दरवाजे और खिड़कियां ठीक से बंद करें; टीन की छत को रस्सियों से बांधें।",
+        "आपातकालीन किट तैयार रखें: पीने का पानी, सूखा भोजन, दवाइयां और टॉर्च।",
+        "जब तक आपदा प्रबंधन विभाग सुरक्षित घोषित न करे, तब तक घर के अंदर रहें।",
+        "वोल्टेज के झटके से बचने के लिए बिजली के सभी उपकरण अनप्लग कर दें।"
+      ]
+    }
+  ]
+}
